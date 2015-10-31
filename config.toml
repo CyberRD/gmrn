@@ -1,0 +1,4 @@
+Url = "http://127.0.0.1/"
+Token = "MYTOKEN"
+Interval = "1m"
+NotifyCommand = "notify.sh"
