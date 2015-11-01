@@ -37,10 +37,6 @@ NotifyCommand = "/tmp/run.sh"
 ```
 curl http://your.gitlab.site/api/v3/session --data 'login=myUser&password=myPass'
 ```
-### What kind of merge request will be notify?
-
-* Open
-* Not in WIP(Work In Progress)
 
 ### Run
 
@@ -53,3 +49,8 @@ You also can use -d flag to show debug level's log.
 ```bash
 $ gmrn -d -c config.toml
 ```
+
+## What kind of merge request will be notify?
+
+* Open
+* Not in WIP(Work In Progress)
