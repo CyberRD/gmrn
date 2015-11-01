@@ -1,6 +1,6 @@
 # GMRN
 
-The polling base gitlab merge request notifier. With Go/Golang.
+The polling base gitlab merge request notifier.
 
 ## Quick Start
 
