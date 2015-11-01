@@ -52,5 +52,5 @@ $ gmrn -d -c config.toml
 
 ## What kind of merge request will be notify?
 
-* Open
+* Opened
 * Not in WIP(Work In Progress)
