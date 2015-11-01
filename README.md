@@ -14,7 +14,7 @@ $ go get github.com/eternnoir/gmrn
 
 ### Create config file.
 
-Config file use (toml)[https://github.com/toml-lang/toml] format.
+Config file use [toml](https://github.com/toml-lang/toml) format.
 
 ```toml
 Url = "http://your.gitlab.url"
