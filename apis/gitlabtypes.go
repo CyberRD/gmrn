@@ -20,7 +20,7 @@ type MergeRequest struct {
 	Author    *Author `json:"author"`
 }
 
-type Poroject struct {
+type Project struct {
 	Id                float64 `json:"id"`
 	PathWithNamespace string  `json:"path_with_namespace"`
 }
