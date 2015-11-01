@@ -9,6 +9,7 @@ _test
 
 #Release File
 gmrn
+config.toml
 
 # Architecture specific extensions/prefixes
 *.[568vq]
