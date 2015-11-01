@@ -116,7 +116,7 @@ func (notifier *GitLabNotifier) runNotifyCommand(mr *apis.MergeRequest) {
 func (notifier *GitLabNotifier) getAllProjectsMr() ([]*apis.MergeRequest, error) {
 	var mrs []*apis.MergeRequest
 	for _, projectId := range notifier.Projects {
-		resultmrs, err := notifier.Api.GetMergeRequests(projectId, "open")
+		resultmrs, err := notifier.Api.GetMergeRequests(projectId, "opened")
 		if err != nil {
 			log.Error(err)
 			return nil, err

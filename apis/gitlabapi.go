@@ -86,7 +86,9 @@ func (gitlab *GitLabApi) GetProject(id string) (*Project, error) {
 // GetRequestProjectId is help to convert project id to request format.
 // If projectId contain "/" must replace to "%2F"
 func (gitlab *GitLabApi) GetRequestProjectId(projectId string) string {
-	return strings.Replace(projectId, "/", "%2F", -1)
+	projectId = strings.Replace(projectId, "/", "%2F", -1)
+	projectId = strings.Replace(projectId, ".", "%2E", -1)
+	return projectId
 }
 
 func (gitlab *GitLabApi) GetMergeRequests(id, state string) ([]*MergeRequest, error) {
