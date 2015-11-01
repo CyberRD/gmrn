@@ -89,6 +89,32 @@ func (gitlab *GitLabApi) GetRequestProjectId(projectId string) string {
 	return strings.Replace(projectId, "/", "%2F", -1)
 }
 
+func (gitlab *GitLabApi) GetMergeRequests(id, state string) ([]*MergeRequest, error) {
+	token := gitlab.token
+	log.Infof("Start get Merge Requests  from %s ", id)
+	params := url.Values{}
+	params.Add("private_token", token)
+	params.Add("state", state)
+	projectId := gitlab.GetRequestProjectId(id)
+	requestUrl := gitlab.GenApiUrl(fmt.Sprintf("projects/%s/merge_requests", projectId))
+	log.Infof("Send Request:%s", requestUrl)
+	result, err := utils.SendGetRequest(requestUrl, params)
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+	resultStr := string(result[:])
+	log.Debugf("Get Result %s", resultStr)
+	var mergeRequests []*MergeRequest
+	err = json.Unmarshal(result, &mergeRequests)
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+	log.Infof("Get %d Merge Request from %s with %s state.", len(mergeRequests), id, state)
+	return mergeRequests, nil
+}
+
 func (gitlab *GitLabApi) GenApiUrl(method string) string {
 	url := fmt.Sprintf("%s/api/%s/%s", gitlab.gitlaburl, gitlab.apiversion, method)
 	return url

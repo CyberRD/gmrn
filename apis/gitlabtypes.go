@@ -13,11 +13,14 @@ type MRList struct {
 }
 
 type MergeRequest struct {
-	Id        float64 `json:"id"`
-	Iid       float64 `json:"iid"`
-	ProjectId float64 `json:"project_id"`
-	Title     string  `json:"title"`
-	Author    *Author `json:"author"`
+	Id             float64 `json:"id"`
+	Iid            float64 `json:"iid"`
+	ProjectId      float64 `json:"project_id"`
+	Title          string  `json:"title"`
+	Author         *Author `json:"author"`
+	State          string  `json:"state"`
+	Assignee       *Author `json:"assignee"`
+	WorkInProgress bool    `json:"work_in_progress"`
 }
 
 type Project struct {
