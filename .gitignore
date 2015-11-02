@@ -10,6 +10,8 @@ _test
 #Release File
 gmrn
 config.toml
+.DS_Store
+release/
 
 # Architecture specific extensions/prefixes
 *.[568vq]
