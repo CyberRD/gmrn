@@ -6,11 +6,13 @@ The polling base gitlab merge request notifier.
 
 ### Installation
 
-Use go get to install.
+* Use go get to install.
 
 ```
 $ go get github.com/eternnoir/gmrn
 ```
+
+* Download binary file from [Release Page](https://github.com/eternnoir/gmrn/releases).
 
 ### Create config file.
 
