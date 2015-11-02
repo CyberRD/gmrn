@@ -77,8 +77,8 @@ func (notifier *GitLabNotifier) triggerNitifyCommand(mr *apis.MergeRequest) {
 		}
 	}
 	log.Infof("Trigger command for %s", mr.Title)
-	notifier.runNotifyCommand(mr)
 	notifier.MRLastNotifyTime[uumrid] = time.Now()
+	notifier.runNotifyCommand(mr)
 
 }
 
