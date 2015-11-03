@@ -23,6 +23,7 @@ func checkResult(resp *http.Response) ([]byte, error) {
 		return nil, errors.New(fmt.Sprintf("Request error:%s-%s", resp.Status, con))
 	}
 	result, err := ioutil.ReadAll(resp.Body)
+	defer resp.Body.Close()
 	if err != nil {
 		return nil, err
 	}

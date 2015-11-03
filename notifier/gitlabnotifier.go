@@ -44,7 +44,6 @@ func (notifier *GitLabNotifier) Run() {
 		err := notifier.notifyForMergeRequest()
 		if err != nil {
 			log.Error(err)
-			break
 		}
 		time.Sleep(notifier.PollingInterval)
 	}
