@@ -31,6 +31,8 @@ func (gitlab *GitLabApi) GetProjects() ([]*Project, error) {
 	log.Infof("Start get project list from %s use token %s", gitlaburl, token)
 	params := url.Values{}
 	params.Add("private_token", token)
+	params.Add("page", "1")
+	params.Add("per_page", "2000")
 	requestUrl := gitlab.GenApiUrl("projects/all")
 	log.Infof("Send Request:%s", requestUrl)
 	result, err := utils.SendGetRequest(requestUrl, params)

@@ -63,7 +63,7 @@ func (notifier *GitLabNotifier) notifyForMergeRequest() error {
 }
 
 func (notifier *GitLabNotifier) triggerNitifyCommand(mr *apis.MergeRequest) {
-	if mr.WorkInProgress {
+	if mr.WorkInProgress != nil {
 		log.Debugf("%s Merger Reques is WorkInProgress. Do not need to notify.", mr.Title)
 		return
 	}

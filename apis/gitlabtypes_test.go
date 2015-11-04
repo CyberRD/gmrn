@@ -51,12 +51,52 @@ func TestDeJosnMergeRequest(t *testing.T) {
     "created_at": "2012-04-29T08:46:00Z"
   },
   "description":"fixed login page css paddings",
-  "work_in_progress": false
+  "work_in_progress": null
 }
 	`
 	mr := MergeRequest{}
 	json.Unmarshal([]byte(jsonstr), &mr)
 	assert.Equal(mr.Id, 1.0)
 	assert.Equal(mr.Iid, 1.0)
+	assert.Nil(mr.WorkInProgress)
 	assert.Equal(mr.Author.Name, "Administrator")
+}
+
+func TestDeJosnMergeRequestWIP(t *testing.T) {
+	assert := assert.New(t)
+	jsonstr := `{
+  "id": 1,
+  "iid": 1,
+  "target_branch": "master",
+  "source_branch": "test1",
+  "project_id": 3,
+  "title": "test1",
+  "state": "merged",
+  "upvotes": 0,
+  "downvotes": 0,
+  "author": {
+    "id": 1,
+    "username": "admin",
+    "email": "admin@example.com",
+    "name": "Administrator",
+    "state": "active",
+    "created_at": "2012-04-29T08:46:00Z"
+  },
+  "assignee": {
+    "id": 1,
+    "username": "admin",
+    "email": "admin@example.com",
+    "name": "Administrator",
+    "state": "active",
+    "created_at": "2012-04-29T08:46:00Z"
+  },
+  "description":"fixed login page css paddings",
+  "work_in_progress": 0
+}
+	`
+	mr := MergeRequest{}
+	json.Unmarshal([]byte(jsonstr), &mr)
+	assert.Equal(mr.Id, 1.0)
+	assert.Equal(mr.Iid, 1.0)
+	assert.NotNil(mr.WorkInProgress)
 }
