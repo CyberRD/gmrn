@@ -25,7 +25,7 @@ func checkResult(resp *http.Response) ([]byte, error) {
 	result, err := ioutil.ReadAll(resp.Body)
 	defer resp.Body.Close()
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Result: %s. Error Msg: %s", string(result), err)
 	}
 	return result, nil
 }

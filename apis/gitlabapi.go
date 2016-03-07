@@ -112,7 +112,7 @@ func (gitlab *GitLabApi) GetMergeRequests(id, state string) ([]*MergeRequest, er
 	var mergeRequests []*MergeRequest
 	err = json.Unmarshal(result, &mergeRequests)
 	if err != nil {
-		log.Error(err)
+		log.Error(fmt.Errorf("Error Msg:%s. Raw Josn: %s", err, string(result)))
 		return nil, err
 	}
 	log.Infof("Get %d Merge Request from %s with %s state.", len(mergeRequests), id, state)
