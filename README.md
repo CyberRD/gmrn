@@ -33,10 +33,10 @@ WebhookUrl = ""
 Channel = ""
 Username = "地方的Merge Rquest"
 TextTemplate = """ {{if .Assignee}} @{{.Assignee.UserName}} {{else}} @channel {{end}} 地方的Merge Request 需要你的協助
-＊ Project : {{.Project.PathWithNamespace}}
-＊ Titel : {{.Title}}
-＊ Author : {{.Author.UserName}}
-＊ [{{.Project.WebUrl}}/merge_requests/{{.Iid}}]({{.Project.WebUrl}}/merge_requests/{{.Iid}})
+* Project : {{.Project.PathWithNamespace}}
+* Titel : {{.Title}}
+* Author : {{.Author.UserName}}
+* [{{.Project.WebUrl}}/merge_requests/{{.Iid}}]({{.Project.WebUrl}}/merge_requests/{{.Iid}})
 
 請盡快改成 `WIP:` 不然我會一直呼叫你 ╮(╯◇╰)╭
 """
