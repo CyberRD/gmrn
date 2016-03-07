@@ -24,7 +24,23 @@ Token = "your_secret_token"
 PollingInterval = "5s"
 NotifyInterval= "15m30s"
 Projects= ["eternnoir/gmrn","balabala/coolproject"] # Optional. Leave empty to monitor all projects.
+
+[[CommandNotifyRunner]]
 NotifyCommand = "/tmp/run.sh"
+
+[[MMNotifyRunner]]
+WebhookUrl = ""
+Channel = ""
+Username = "地方的Merge Rquest"
+TextTemplate = """ {{if .Assignee}} @{{.Assignee.UserName}} {{else}} @channel {{end}} 地方的Merge Request 需要你的協助
+＊ Project : {{.Project.PathWithNamespace}}
+＊ Titel : {{.Title}}
+＊ Author : {{.Author.UserName}}
+＊ [{{.Project.WebUrl}}/merge_requests/{{.Iid}}]({{.Project.WebUrl}}/merge_requests/{{.Iid}})
+
+請盡快改成 `WIP:` 不然我會一直呼叫你 ╮(╯◇╰)╭
+"""
+
 ```
 
 * Url : Your gitlab site.
