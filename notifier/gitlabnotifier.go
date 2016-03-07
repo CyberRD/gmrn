@@ -1,24 +1,20 @@
 package notifier
 
 import (
-	"fmt"
 	log "github.com/Sirupsen/logrus"
 	"github.com/eternnoir/gmrn/apis"
-	"io/ioutil"
-	"os"
-	"os/exec"
 	"strconv"
 	"time"
 )
 
-func InitGitLabNotifier(url, token string, projects []string, pollingInterval, notifyInterval time.Duration, notifyCommand string) *GitLabNotifier {
+func InitGitLabNotifier(url, token string, projects []string, pollingInterval, notifyInterval time.Duration) *GitLabNotifier {
 	gitlab := GitLabNotifier{}
 	gitlab.Url = url
 	gitlab.Token = token
 	gitlab.Projects = projects
 	gitlab.PollingInterval = pollingInterval
 	gitlab.NotifyInterval = notifyInterval
-	gitlab.NotifyCommand = notifyCommand
+	gitlab.NotifyRunners = []NotifyRunner{}
 	gitlab.Api = apis.InitGitlabApi(url, token)
 	gitlab.MRLastNotifyTime = make(map[string]time.Time)
 	log.Infof("Init GitLabNotifier. Url:%s , Toke:%s, %d projects.", url, token, len(projects))
@@ -32,7 +28,7 @@ type GitLabNotifier struct {
 	PollingInterval  time.Duration
 	NotifyInterval   time.Duration
 	Api              *apis.GitLabApi
-	NotifyCommand    string
+	NotifyRunners    []NotifyRunner
 	MRLastNotifyTime map[string]time.Time
 }
 
@@ -47,6 +43,10 @@ func (notifier *GitLabNotifier) Run() {
 		}
 		time.Sleep(notifier.PollingInterval)
 	}
+}
+func (notifier *GitLabNotifier) AppendNotifyRunner(runner NotifyRunner) {
+	log.Infof("Append Runner %#v", runner)
+	notifier.NotifyRunners = append(notifier.NotifyRunners, runner)
 }
 
 func (notifier *GitLabNotifier) notifyForMergeRequest() error {
@@ -63,8 +63,8 @@ func (notifier *GitLabNotifier) notifyForMergeRequest() error {
 }
 
 func (notifier *GitLabNotifier) triggerNitifyCommand(mr *apis.MergeRequest) {
-	if mr.WorkInProgress != nil {
-		log.Debugf("%s Merger Reques is WorkInProgress. Do not need to notify.", mr.Title)
+	if mr.WorkInProgress {
+		log.Debugf("%s Merge Reques is WorkInProgress. Do not need to notify.", mr.Title)
 		return
 	}
 	uumrid := strconv.Itoa(int(mr.ProjectId)) + ":" + strconv.Itoa(int(mr.Id))
@@ -82,34 +82,20 @@ func (notifier *GitLabNotifier) triggerNitifyCommand(mr *apis.MergeRequest) {
 }
 
 func (notifier *GitLabNotifier) runNotifyCommand(mr *apis.MergeRequest) {
-	log.Infof("Start Trigger Command %s", notifier.NotifyCommand)
-	binary, err := exec.LookPath(notifier.NotifyCommand)
-	if err != nil {
-		log.Error(err)
-		return
-	}
-	cmd := exec.Command(binary)
-	env := os.Environ()
-	env = append(env, fmt.Sprintf("MR_TITLE=%s", mr.Title))
-	cmd.Env = env
-	cmdOut, _ := cmd.StdoutPipe()
-
-	startErr := cmd.Start()
-	if startErr != nil {
-		log.Error(startErr)
+	mrerr := mr.GetProjectInfo(notifier.Api)
+	if mrerr != nil {
+		log.Errorf("Try to get merge request's project detial [FAIL]. %#v", mr)
 		return
 	}
 
-	// read stdout and stderr
-	stdOutput, _ := ioutil.ReadAll(cmdOut)
-	log.Debug(string(stdOutput[:]))
-
-	err = cmd.Wait()
-	if err != nil {
-		log.Error(err)
-		return
+	for _, nr := range notifier.NotifyRunners {
+		log.Infof("Start Trigger NotifyRunner %#v", nr)
+		err := nr.Trigger(mr)
+		if err != nil {
+			log.Errorf("Trigger NotifyRunner %#v [FAIL]", nr)
+		}
+		log.Infof("Tirgger NotifyRunner %#v  [Success].", nr)
 	}
-	log.Infof("Command %s Done.", notifier.NotifyCommand)
 }
 
 func (notifier *GitLabNotifier) getAllProjectsMr() ([]*apis.MergeRequest, error) {

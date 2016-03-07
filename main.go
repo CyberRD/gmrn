@@ -39,8 +39,10 @@ func main() {
 }
 
 func RunNotifier(config *GitLabConfig) {
-	nf := notifier.InitGitLabNotifier(config.Url, config.Token, config.Projects, config.PollingInterval.Duration, config.NotifyInterval.Duration, config.NotifyCommand)
+	log.Infof("Config loaded. %#v", config)
+	nf := notifier.InitGitLabNotifier(config.Url, config.Token, config.Projects, config.PollingInterval.Duration, config.NotifyInterval.Duration)
 	log.Infof("Start Notifier site: %s", nf.Url)
+	AppendAllRunner(config, nf)
 	nf.Run()
 }
 
@@ -56,13 +58,23 @@ func LoadConfig(path string) (*GitLabConfig, error) {
 	return &config, nil
 }
 
+func AppendAllRunner(config *GitLabConfig, notifier *notifier.GitLabNotifier) {
+	for _, rn := range config.CommandNotifyRunner {
+		notifier.AppendNotifyRunner(rn)
+	}
+	for _, mrn := range config.MMNotifyRunner {
+		notifier.AppendNotifyRunner(mrn)
+	}
+}
+
 type GitLabConfig struct {
-	Url             string
-	Token           string
-	PollingInterval duration
-	NotifyInterval  duration
-	Projects        []string
-	NotifyCommand   string
+	Url                 string
+	Token               string
+	PollingInterval     duration
+	NotifyInterval      duration
+	Projects            []string
+	CommandNotifyRunner []*notifier.CommandNotifyRunner
+	MMNotifyRunner      []*notifier.MMNotifyRunner
 }
 
 type duration struct {

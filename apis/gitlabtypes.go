@@ -1,7 +1,8 @@
 package apis
 
 import (
-//"encoding/json"
+	//"encoding/json"a
+	"strconv"
 )
 
 type Author struct {
@@ -20,10 +21,21 @@ type MergeRequest struct {
 	Author         *Author `json:"author"`
 	State          string  `json:"state"`
 	Assignee       *Author `json:"assignee"`
-	WorkInProgress *bool   `json:"work_in_progress"`
+	WorkInProgress bool    `json:"work_in_progress"`
+	Project        *Project
+}
+
+func (mr *MergeRequest) GetProjectInfo(api *GitLabApi) error {
+	project, err := api.GetProject(strconv.Itoa(int(mr.ProjectId)))
+	if err != nil {
+		return err
+	}
+	mr.Project = project
+	return nil
 }
 
 type Project struct {
 	Id                float64 `json:"id"`
 	PathWithNamespace string  `json:"path_with_namespace"`
+	WebUrl            string  `json:"web_url"`
 }
