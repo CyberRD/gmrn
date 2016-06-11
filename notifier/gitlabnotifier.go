@@ -50,19 +50,19 @@ func (notifier *GitLabNotifier) AppendNotifyRunner(runner NotifyRunner) {
 }
 
 func (notifier *GitLabNotifier) notifyForMergeRequest() error {
-	allMrs, err := notifier.getAllProjectsMr()
+	allMrs, err := notifier.GetAllProjectsMr()
 	if err != nil {
 		log.Error(err)
 		return err
 	}
 	log.Infof("Get %d Merge Requests", len(allMrs))
 	for _, mr := range allMrs {
-		go notifier.triggerNitifyCommand(mr)
+		go notifier.triggerNotifyCommand(mr)
 	}
 	return nil
 }
 
-func (notifier *GitLabNotifier) triggerNitifyCommand(mr *apis.MergeRequest) {
+func (notifier *GitLabNotifier) triggerNotifyCommand(mr *apis.MergeRequest) {
 	if mr.WorkInProgress {
 		log.Debugf("%s Merge Reques is WorkInProgress. Do not need to notify.", mr.Title)
 		return
@@ -98,7 +98,7 @@ func (notifier *GitLabNotifier) runNotifyCommand(mr *apis.MergeRequest) {
 	}
 }
 
-func (notifier *GitLabNotifier) getAllProjectsMr() ([]*apis.MergeRequest, error) {
+func (notifier *GitLabNotifier) GetAllProjectsMr() ([]*apis.MergeRequest, error) {
 	var mrs []*apis.MergeRequest
 	for _, projectId := range notifier.Projects {
 		resultmrs, err := notifier.Api.GetMergeRequests(projectId, "opened")
