@@ -34,7 +34,7 @@ type GitLabNotifier struct {
 
 func (notifier *GitLabNotifier) Run() {
 
-	notifier.checkProjects()
+	notifier.CheckProjects()
 	//  loops forever to polling merge request.
 	for {
 		err := notifier.notifyForMergeRequest()
@@ -113,7 +113,7 @@ func (notifier *GitLabNotifier) GetAllProjectsMr() ([]*apis.MergeRequest, error)
 
 // checkProjects is check notifier's projects is exist or not.
 // If projects is empty, It will set all project to project list.
-func (notifier *GitLabNotifier) checkProjects() error {
+func (notifier *GitLabNotifier) CheckProjects() error {
 	if len(notifier.Projects) < 1 {
 		log.Infof("Notifier' project is empty. Load all projects from gitlab.")
 		err := notifier.setAllProjectId()
